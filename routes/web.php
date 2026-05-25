@@ -1,7 +1,20 @@
 <?php
 
+use App\Http\Controllers\SacrificeController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [SacrificeController::class, 'index'])->name('home');
+Route::post('/search', [SacrificeController::class, 'search'])->name('sacrifice.search');
+
+Route::prefix('sacrifice/{code}')
+    ->where(['code' => '[A-Z0-9\-]+'])
+    ->group(function () {
+        Route::get('/', [SacrificeController::class, 'show'])->name('sacrifice.show');
+        Route::get('/profile', [SacrificeController::class, 'profile'])->name('sacrifice.profile');
+        Route::get('/progress', [SacrificeController::class, 'progress'])->name('sacrifice.progress');
+        Route::get('/gallery', [SacrificeController::class, 'gallery'])->name('sacrifice.gallery');
+        Route::get('/certificate', [SacrificeController::class, 'certificate'])->name('sacrifice.certificate');
+        Route::get('/download-certificate', [SacrificeController::class, 'downloadCertificate'])->name('sacrifice.certificate.download');
+    });
+
+Route::fallback(fn () => response()->view('errors.404', [], 404));
