@@ -13,7 +13,7 @@
             Dokumen resmi pelaksanaan kurban atas nama {{ $sacrifice->donor_name }}
         </p>
         <div class="flex flex-col sm:flex-row gap-3 justify-center">
-            <a href="{{ route('sacrifice.certificate.download', $sacrifice->reference_code) }}"
+            <a href="{{ route('sacrifice.certificate.download', $sacrifice->public_slug) }}"
                class="inline-flex items-center justify-center gap-2 bg-white text-[#1D9E75] font-bold px-6 py-3 rounded-xl hover:bg-white/90 transition-colors shadow-lg">
                 <i class="ti ti-download"></i>
                 Unduh PDF

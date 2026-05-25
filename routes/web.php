@@ -4,10 +4,14 @@ use App\Http\Controllers\SacrificeController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [SacrificeController::class, 'index'])->name('home');
-Route::post('/search', [SacrificeController::class, 'search'])->name('sacrifice.search');
 
-Route::prefix('sacrifice/{code}')
-    ->where(['code' => '[A-Z0-9\-]+'])
+Route::post('/search', [SacrificeController::class, 'search'])
+    ->name('sacrifice.search')
+    ->middleware('throttle:search');
+
+Route::prefix('sacrifice/{slug}')
+    ->where(['slug' => 'sac_[a-f0-9]{28}'])
+    ->middleware('throttle:view')
     ->group(function () {
         Route::get('/', [SacrificeController::class, 'show'])->name('sacrifice.show');
         Route::get('/profile', [SacrificeController::class, 'profile'])->name('sacrifice.profile');

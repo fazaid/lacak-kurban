@@ -26,6 +26,8 @@
                      'status_field' => 'status_purchase', 'date_field' => 'date_purchase_completed'],
                     ['key' => 'slaughter', 'label' => 'Penyembelihan', 'icon' => 'ti-cut',
                      'status_field' => 'status_slaughter', 'date_field' => 'date_slaughter_completed'],
+                    ['key' => 'on_way', 'label' => 'Menuju Tempat Distribusi', 'icon' => 'ti-map-pin-route',
+                     'status_field' => 'status_on_way', 'date_field' => 'date_on_way_completed'],
                     ['key' => 'distribution', 'label' => 'Distribusi Daging', 'icon' => 'ti-truck-delivery',
                      'status_field' => 'status_distribution', 'date_field' => 'date_distribution_completed'],
                     ['key' => 'report', 'label' => 'Laporan', 'icon' => 'ti-report',
@@ -130,7 +132,7 @@
     // Live progress bar preview
     function updatePreview() {
         const radios = document.querySelectorAll('input[type="radio"][value="completed"]:checked');
-        const pct    = Math.round(radios.length / 4 * 100);
+        const pct    = Math.round(radios.length / 5 * 100);
         const bar    = document.getElementById('progress-bar');
         const label  = document.getElementById('progress-pct-label');
         if (bar)   bar.style.width   = pct + '%';

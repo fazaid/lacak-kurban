@@ -12,27 +12,83 @@ class Sacrifice extends Model
     use HasFactory;
 
     protected $fillable = [
-        'reference_code', 'sacrifice_type', 'donor_name', 'donor_email', 'donor_phone',
+        'reference_code', 'public_slug', 'donor_email_hash',
+        'sacrifice_type', 'donor_name', 'donor_email', 'donor_phone',
         'animal_type', 'animal_price', 'sharing_type', 'share_ratio',
         'purchase_date', 'purchase_location', 'slaughter_location',
         'beneficiary_name', 'beneficiary_address', 'beneficiary_type',
         'status_purchase', 'date_purchase_completed',
         'status_slaughter', 'date_slaughter_completed',
+        'status_on_way', 'date_on_way_completed',
         'status_distribution', 'date_distribution_completed',
         'status_report', 'date_report_completed',
         'certificate_file_path', 'certificate_generated_at', 'notes',
+        'last_accessed_ip', 'last_accessed_at', 'access_count',
     ];
 
     protected $casts = [
         'purchase_date' => 'date',
         'date_purchase_completed' => 'date',
         'date_slaughter_completed' => 'date',
+        'date_on_way_completed' => 'date',
         'date_distribution_completed' => 'date',
         'date_report_completed' => 'date',
         'certificate_generated_at' => 'datetime',
+        'last_accessed_at' => 'datetime',
         'animal_price' => 'decimal:2',
         'share_ratio' => 'integer',
+        'access_count' => 'integer',
     ];
+
+    // -------------------------------------------------------------------------
+    // Boot — auto-generate slug & hash email on create
+    // -------------------------------------------------------------------------
+
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::creating(function (self $model): void {
+            if (!$model->public_slug) {
+                $model->public_slug = static::generateUniqueSlug();
+            }
+            if ($model->donor_email && !$model->donor_email_hash) {
+                $model->donor_email_hash = hash('sha256', strtolower(trim($model->donor_email)));
+            }
+        });
+    }
+
+    public static function generateUniqueSlug(): string
+    {
+        do {
+            $slug = 'sac_' . bin2hex(random_bytes(14));
+        } while (static::where('public_slug', $slug)->exists());
+
+        return $slug;
+    }
+
+    public static function isValidSlug(string $slug): bool
+    {
+        return preg_match('/^sac_[a-f0-9]{28}$/', $slug) === 1;
+    }
+
+    public function logAccess(string $ipAddress): void
+    {
+        $this->increment('access_count');
+        $this->update([
+            'last_accessed_ip' => $ipAddress,
+            'last_accessed_at' => now(),
+        ]);
+
+        if ($this->access_count > 1000) {
+            \Illuminate\Support\Facades\Log::warning('High access count on sacrifice', [
+                'sacrifice_id' => $this->id,
+                'reference_code' => $this->reference_code,
+                'access_count' => $this->access_count,
+                'last_ip' => $ipAddress,
+            ]);
+        }
+    }
 
     // -------------------------------------------------------------------------
     // Relationships
@@ -69,6 +125,14 @@ class Sacrifice extends Model
                 'icon' => 'ti-cut',
             ],
             [
+                'key' => 'on_way',
+                'label' => 'Menuju Tempat Distribusi',
+                'description' => 'Daging kurban sedang dalam perjalanan menuju lokasi distribusi',
+                'status' => $this->status_on_way,
+                'date' => $this->date_on_way_completed,
+                'icon' => 'ti-map-pin-route',
+            ],
+            [
                 'key' => 'distribution',
                 'label' => 'Distribusi Daging',
                 'description' => 'Daging kurban telah didistribusikan kepada penerima manfaat',
@@ -92,16 +156,18 @@ class Sacrifice extends Model
         $completed = 0;
         if ($this->status_purchase === 'completed') $completed++;
         if ($this->status_slaughter === 'completed') $completed++;
+        if ($this->status_on_way === 'completed') $completed++;
         if ($this->status_distribution === 'completed') $completed++;
         if ($this->status_report === 'completed') $completed++;
 
-        return (int) ($completed / 4 * 100);
+        return (int) ($completed / 5 * 100);
     }
 
     public function isFullyCompleted(): bool
     {
         return $this->status_purchase === 'completed'
             && $this->status_slaughter === 'completed'
+            && $this->status_on_way === 'completed'
             && $this->status_distribution === 'completed'
             && $this->status_report === 'completed';
     }
@@ -111,6 +177,7 @@ class Sacrifice extends Model
         $status = match ($statusType) {
             'purchase' => $this->status_purchase,
             'slaughter' => $this->status_slaughter,
+            'on_way' => $this->status_on_way,
             'distribution' => $this->status_distribution,
             'report' => $this->status_report,
             default => $statusType,

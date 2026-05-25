@@ -33,7 +33,7 @@
     {{-- Tab navigation --}}
     <div class="bg-white border-b border-gray-200 sticky top-14 z-10 shadow-sm">
         <div class="max-w-3xl mx-auto px-4">
-            <div class="flex overflow-x-auto -mb-px scrollbar-hide" id="tab-nav">
+            <div class="flex overflow-x-auto -mb-px scrollbar-hide" id="nav-tabs">
                 @foreach([
                     ['id' => 'profile', 'label' => 'Profil', 'icon' => 'ti-user'],
                     ['id' => 'progress', 'label' => 'Progress', 'icon' => 'ti-timeline'],

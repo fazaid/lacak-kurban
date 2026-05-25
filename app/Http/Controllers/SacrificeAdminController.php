@@ -18,11 +18,13 @@ class SacrificeAdminController extends Controller
         $total = Sacrifice::count();
         $completed = Sacrifice::where('status_purchase', 'completed')
             ->where('status_slaughter', 'completed')
+            ->where('status_on_way', 'completed')
             ->where('status_distribution', 'completed')
             ->where('status_report', 'completed')
             ->count();
         $pending = Sacrifice::where('status_purchase', 'pending')
             ->where('status_slaughter', 'pending')
+            ->where('status_on_way', 'pending')
             ->where('status_distribution', 'pending')
             ->where('status_report', 'pending')
             ->count();
@@ -70,6 +72,7 @@ class SacrificeAdminController extends Controller
                 'completed' => $query
                     ->where('status_purchase',     'completed')
                     ->where('status_slaughter',    'completed')
+                    ->where('status_on_way',       'completed')
                     ->where('status_distribution', 'completed')
                     ->where('status_report',       'completed'),
 
@@ -77,17 +80,20 @@ class SacrificeAdminController extends Controller
                     ->where(fn ($q) => $q
                         ->where('status_purchase',     'completed')
                         ->orWhere('status_slaughter',    'completed')
+                        ->orWhere('status_on_way',       'completed')
                         ->orWhere('status_distribution', 'completed')
                         ->orWhere('status_report',       'completed'))
                     ->where(fn ($q) => $q
                         ->where('status_purchase',     'pending')
                         ->orWhere('status_slaughter',    'pending')
+                        ->orWhere('status_on_way',       'pending')
                         ->orWhere('status_distribution', 'pending')
                         ->orWhere('status_report',       'pending')),
 
                 'pending' => $query
                     ->where('status_purchase',     'pending')
                     ->where('status_slaughter',    'pending')
+                    ->where('status_on_way',       'pending')
                     ->where('status_distribution', 'pending')
                     ->where('status_report',       'pending'),
 
@@ -177,6 +183,8 @@ class SacrificeAdminController extends Controller
             'date_purchase_completed' => ['nullable', 'date'],
             'status_slaughter' => ['required', 'in:pending,completed'],
             'date_slaughter_completed' => ['nullable', 'date'],
+            'status_on_way' => ['required', 'in:pending,completed'],
+            'date_on_way_completed' => ['nullable', 'date'],
             'status_distribution' => ['required', 'in:pending,completed'],
             'date_distribution_completed' => ['nullable', 'date'],
             'status_report' => ['required', 'in:pending,completed'],
@@ -262,6 +270,7 @@ class SacrificeAdminController extends Controller
                 'Lokasi Penyembelihan', 'Nama Penerima', 'Alamat Penerima', 'Jenis Penerima',
                 'Status Pembelian', 'Tgl Selesai Pembelian',
                 'Status Penyembelihan', 'Tgl Penyembelihan',
+                'Status Menuju Distribusi', 'Tgl Menuju Distribusi',
                 'Status Distribusi', 'Tgl Distribusi',
                 'Status Laporan', 'Tgl Laporan',
                 'Progress (%)', 'Status', 'Catatan', 'Dibuat',
@@ -276,6 +285,7 @@ class SacrificeAdminController extends Controller
                     $s->beneficiary_address, $s->beneficiary_type,
                     $s->status_purchase, $s->date_purchase_completed?->format('d/m/Y'),
                     $s->status_slaughter, $s->date_slaughter_completed?->format('d/m/Y'),
+                    $s->status_on_way, $s->date_on_way_completed?->format('d/m/Y'),
                     $s->status_distribution, $s->date_distribution_completed?->format('d/m/Y'),
                     $s->status_report, $s->date_report_completed?->format('d/m/Y'),
                     $s->getProgressPercentage(), $s->getStatusLabel(),
@@ -300,11 +310,13 @@ class SacrificeAdminController extends Controller
 
         $completedCount  = Sacrifice::where('status_purchase',     'completed')
                                ->where('status_slaughter',    'completed')
+                               ->where('status_on_way',       'completed')
                                ->where('status_distribution', 'completed')
                                ->where('status_report',       'completed')
                                ->count();
         $pendingCount    = Sacrifice::where('status_purchase',     'pending')
                                ->where('status_slaughter',    'pending')
+                               ->where('status_on_way',       'pending')
                                ->where('status_distribution', 'pending')
                                ->where('status_report',       'pending')
                                ->count();

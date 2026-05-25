@@ -18,7 +18,7 @@ class SacrificeController extends Controller
     public function search(Request $request): RedirectResponse
     {
         $request->validate([
-            'reference_code' => ['required', 'string'],
+            'reference_code' => ['required', 'string', 'max:20'],
         ]);
 
         $referenceCode = strtoupper(trim($request->input('reference_code')));
@@ -30,37 +30,38 @@ class SacrificeController extends Controller
                 ->withInput();
         }
 
-        return redirect()->route('sacrifice.show', $sacrifice->reference_code);
+        // Redirect to unguessable public slug URL, not the sequential reference code
+        return redirect()->route('sacrifice.show', $sacrifice->public_slug);
     }
 
-    public function show(string $code): View
+    public function show(string $slug, Request $request): View
     {
-        return $this->renderDetail($code, 'profile');
+        return $this->renderDetail($slug, 'profile', $request);
     }
 
-    public function profile(string $code): View
+    public function profile(string $slug, Request $request): View
     {
-        return $this->renderDetail($code, 'profile');
+        return $this->renderDetail($slug, 'profile', $request);
     }
 
-    public function progress(string $code): View
+    public function progress(string $slug, Request $request): View
     {
-        return $this->renderDetail($code, 'progress');
+        return $this->renderDetail($slug, 'progress', $request);
     }
 
-    public function gallery(string $code): View
+    public function gallery(string $slug, Request $request): View
     {
-        return $this->renderDetail($code, 'gallery');
+        return $this->renderDetail($slug, 'gallery', $request);
     }
 
-    public function certificate(string $code): View
+    public function certificate(string $slug, Request $request): View
     {
-        return $this->renderDetail($code, 'certificate');
+        return $this->renderDetail($slug, 'certificate', $request);
     }
 
-    public function downloadCertificate(string $code)
+    public function downloadCertificate(string $slug)
     {
-        $sacrifice = Sacrifice::where('reference_code', $code)->firstOrFail();
+        $sacrifice = Sacrifice::where('public_slug', $slug)->firstOrFail();
 
         if (!$sacrifice->hasCertificate()) {
             abort(403, 'Sertifikat belum tersedia untuk kurban ini.');
@@ -72,11 +73,13 @@ class SacrificeController extends Controller
         return $pdf->download("sertifikat-kurban-{$sacrifice->reference_code}.pdf");
     }
 
-    private function renderDetail(string $code, string $activeTab): View
+    private function renderDetail(string $slug, string $activeTab, Request $request): View
     {
         $sacrifice = Sacrifice::with('galleries')
-            ->where('reference_code', $code)
+            ->where('public_slug', $slug)
             ->firstOrFail();
+
+        $sacrifice->logAccess($request->ip());
 
         $photosByCategory = $sacrifice->getPhotosByCategories();
 

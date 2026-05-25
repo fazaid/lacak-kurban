@@ -29,6 +29,8 @@ return new class extends Migration
             $table->date('date_purchase_completed')->nullable();
             $table->enum('status_slaughter', ['pending', 'completed'])->default('pending');
             $table->date('date_slaughter_completed')->nullable();
+            $table->enum('status_on_way', ['pending', 'completed'])->default('pending');
+            $table->date('date_on_way_completed')->nullable();
             $table->enum('status_distribution', ['pending', 'completed'])->default('pending');
             $table->date('date_distribution_completed')->nullable();
             $table->enum('status_report', ['pending', 'completed'])->default('pending');
