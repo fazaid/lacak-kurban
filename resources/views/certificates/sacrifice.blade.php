@@ -40,14 +40,13 @@
             text-align: center;
         }
         .header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
+            text-align: center;
             margin-bottom: 10px;
         }
         .logo-circle {
-            width: 40px;
-            height: 40px;
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 6px;
         }
         .logo-circle img {
             width: 100%;
@@ -139,13 +138,25 @@
             color: #555;
         }
         .signature-row {
-            display: flex;
-            justify-content: space-between;
+            display: table;
             width: 100%;
             margin-top: auto;
             padding-top: 10px;
         }
+        .sig-cell {
+            display: table-cell;
+            width: 33%;
+            vertical-align: bottom;
+            text-align: center;
+        }
+        .sig-cell-right {
+            display: table-cell;
+            width: 33%;
+            vertical-align: bottom;
+            text-align: right;
+        }
         .sig-box {
+            display: inline-block;
             text-align: center;
             width: 140px;
         }
@@ -153,7 +164,13 @@
             width: 100%;
             border-bottom: 1px solid #333;
             margin-bottom: 4px;
-            height: 30px;
+            height: 40px;
+            text-align: center;
+            vertical-align: bottom;
+        }
+        .sig-img {
+            height: 36px;
+            max-width: 120px;
         }
         .sig-name {
             font-size: 10px;
@@ -176,8 +193,10 @@
     </style>
 </head>
 @php
-    $logoPath = public_path('images/logos/logo.png');
-    $logoBase64 = 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath));
+    $logoPath    = public_path('images/logos/logo.png');
+    $logoBase64  = 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath));
+    $sigLeft     = \App\Http\Controllers\AdminSettingsController::signatureBase64('left');
+    $sigRight    = \App\Http\Controllers\AdminSettingsController::signatureBase64('right');
 @endphp
 <body>
 <div class="page">
@@ -190,6 +209,7 @@
             <div class="org-name">Kurban Laznas NPC</div>
         </div>
 
+
         <div class="divider"></div>
 
         <div class="cert-title">Sertifikat Kurban</div>
@@ -201,13 +221,13 @@
         <div class="donor-name">{{ $sacrifice->donor_name }}</div>
 
         <div class="main-text">
-            telah melaksanakan ibadah kurban melalui NPC Kurban Tracker
+            Telah melaksanakan ibadah kurban melalui Laznas NPC dengan detail sebagai berikut:
         </div>
 
         <div class="details-grid">
             <div class="detail-box">
                 <div class="detail-label">Jenis Hewan</div>
-                <div class="detail-value">{{ $sacrifice->getAnimalTypeLabel() }} — {{ $sacrifice->getSacrificeTypeLabel() }}</div>
+                <div class="detail-value">{{ $sacrifice->sharing_type === 'full' ? '1' : $sacrifice->getShareLabel() }} {{ $sacrifice->getAnimalTypeLabel() }} - {{ $sacrifice->getSacrificeTypeLabel() }}</div>
             </div>
             @if($sacrifice->purchase_date)
             <div class="detail-box">
@@ -231,18 +251,30 @@
         @endif
 
         <div class="signature-row">
-            <div class="sig-box">
-                <div class="sig-line"></div>
-                <div class="sig-name">Panitia Kurban NPC</div>
-                <div class="sig-title">Ketua Pelaksana</div>
+            <div class="sig-cell">
+                <div class="sig-box">
+                    <div class="sig-line">
+                        @if($sigLeft)
+                        <img src="{{ $sigLeft }}" class="sig-img" alt="ttd">
+                        @endif
+                    </div>
+                    <div class="sig-name">Panitia Kurban NPC</div>
+                    <div class="sig-title">Ketua Pelaksana</div>
+                </div>
             </div>
-            <div style="text-align:center; font-size:9px; color:#888; align-self:flex-end; padding-bottom:2px;">
+            <div class="sig-cell" style="font-size:9px; color:#888; padding-bottom:2px;">
                 Diterbitkan: {{ $sacrifice->certificate_generated_at->format('d F Y') }}
             </div>
-            <div class="sig-box">
-                <div class="sig-line"></div>
-                <div class="sig-name">NPC Organization</div>
-                <div class="sig-title">Direktur</div>
+            <div class="sig-cell-right">
+                <div class="sig-box">
+                    <div class="sig-line">
+                        @if($sigRight)
+                        <img src="{{ $sigRight }}" class="sig-img" alt="ttd">
+                        @endif
+                    </div>
+                    <div class="sig-name">NPC Organization</div>
+                    <div class="sig-title">Direktur</div>
+                </div>
             </div>
         </div>
     </div>

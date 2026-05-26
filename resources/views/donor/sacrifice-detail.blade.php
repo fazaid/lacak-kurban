@@ -23,11 +23,6 @@
             </span>
         </div>
 
-        {{-- Progress bar --}}
-        <div class="bg-white/20 h-1.5">
-            <div class="bg-white h-full transition-all duration-500"
-                 style="width: {{ $sacrifice->getProgressPercentage() }}%"></div>
-        </div>
     </header>
 
     {{-- Tab navigation --}}

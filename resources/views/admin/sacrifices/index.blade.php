@@ -256,6 +256,11 @@
                                    class="w-8 h-8 rounded-lg bg-gray-100 hover:bg-[#1D9E75] hover:text-white text-gray-600 flex items-center justify-center transition-colors">
                                     <i class="ti ti-eye text-sm"></i>
                                 </a>
+                                <button onclick="copyDonorLink(this, '{{ route('sacrifice.show', ['slug' => $sacrifice->public_slug]) }}')"
+                                        title="Salin Link Portal Donatur"
+                                        class="copy-btn w-8 h-8 rounded-lg bg-[#1D9E75]/10 hover:bg-[#1D9E75] text-[#1D9E75] hover:text-white flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95">
+                                    <i class="ti ti-link text-sm"></i>
+                                </button>
                                 @if(auth()->user()->canWrite())
                                 <a href="{{ route('admin.sacrifices.edit', $sacrifice) }}"
                                    title="Edit"
@@ -302,4 +307,53 @@
     </div>
 
 </div>
+
+{{-- Toast notifikasi salin link --}}
+<div id="copy-toast"
+     class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-sm font-medium px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2 opacity-0 pointer-events-none transition-opacity duration-300 z-50">
+    <i class="ti ti-check text-[#1D9E75]"></i>
+    Link portal donatur berhasil disalin!
+</div>
+
+@push('scripts')
+<script>
+function copyDonorLink(btn, url) {
+    function onCopied() {
+        // Feedback pada tombol
+        const icon = btn.querySelector('i');
+        icon.classList.replace('ti-link', 'ti-check');
+        btn.classList.remove('bg-[#1D9E75]/10', 'text-[#1D9E75]');
+        btn.classList.add('bg-green-500', 'text-white');
+        btn.title = 'Tersalin!';
+
+        // Toast
+        const toast = document.getElementById('copy-toast');
+        toast.classList.remove('opacity-0');
+        toast.classList.add('opacity-100');
+
+        setTimeout(() => {
+            icon.classList.replace('ti-check', 'ti-link');
+            btn.classList.add('bg-[#1D9E75]/10', 'text-[#1D9E75]');
+            btn.classList.remove('bg-green-500', 'text-white');
+            btn.title = 'Salin Link Portal Donatur';
+            toast.classList.remove('opacity-100');
+            toast.classList.add('opacity-0');
+        }, 2000);
+    }
+
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(url).then(onCopied);
+    } else {
+        const el = document.createElement('textarea');
+        el.value = url;
+        el.style.cssText = 'position:fixed;left:-9999px;top:-9999px';
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+        onCopied();
+    }
+}
+</script>
+@endpush
 @endsection

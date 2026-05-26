@@ -133,6 +133,33 @@
                 </div>
             </div>
 
+            {{-- Link Portal Donatur --}}
+            <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                <div class="px-5 py-3 bg-gray-50 border-b border-gray-100 flex items-center gap-2">
+                    <i class="ti ti-link text-[#1D9E75]"></i>
+                    <h3 class="font-semibold text-gray-800 text-sm">Link Portal Donatur</h3>
+                </div>
+                <div class="p-4 space-y-3">
+                    <p class="text-xs text-gray-500">Bagikan link ini kepada donatur untuk melihat status kurban secara langsung.</p>
+                    <div class="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2">
+                        <span id="donor-link-text" class="flex-1 text-xs font-mono text-gray-700 truncate">{{ route('sacrifice.show', ['slug' => $sacrifice->public_slug]) }}</span>
+                        <button onclick="copyDonorLink()"
+                                id="copy-btn"
+                                title="Salin link"
+                                class="shrink-0 inline-flex items-center gap-1.5 text-xs font-medium text-[#1D9E75] hover:text-[#157a5a] transition-colors">
+                            <i id="copy-icon" class="ti ti-copy text-sm"></i>
+                            <span id="copy-label">Salin</span>
+                        </button>
+                    </div>
+                    <a href="{{ route('sacrifice.show', ['slug' => $sacrifice->public_slug]) }}"
+                       target="_blank"
+                       class="w-full inline-flex items-center justify-center gap-2 border border-gray-300 text-gray-600 hover:bg-gray-50 text-sm font-medium px-4 py-2 rounded-lg transition-colors">
+                        <i class="ti ti-external-link text-sm"></i>
+                        Buka Portal Donatur
+                    </a>
+                </div>
+            </div>
+
             {{-- Certificate --}}
             <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
                 <div class="px-5 py-3 bg-gray-50 border-b border-gray-100 flex items-center gap-2">
@@ -290,4 +317,36 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+function copyDonorLink() {
+    const url = document.getElementById('donor-link-text').textContent.trim();
+
+    function onCopied() {
+        const icon  = document.getElementById('copy-icon');
+        const label = document.getElementById('copy-label');
+        icon.classList.replace('ti-copy', 'ti-check');
+        label.textContent = 'Tersalin!';
+        setTimeout(() => {
+            icon.classList.replace('ti-check', 'ti-copy');
+            label.textContent = 'Salin';
+        }, 2000);
+    }
+
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(url).then(onCopied);
+    } else {
+        const el = document.createElement('textarea');
+        el.value = url;
+        el.style.cssText = 'position:fixed;left:-9999px;top:-9999px';
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+        onCopied();
+    }
+}
+</script>
+@endpush
 @endsection

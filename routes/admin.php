@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminSettingsController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SacrificeAdminController;
 use Illuminate\Support\Facades\Route;
@@ -64,4 +65,12 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     // ── Statistics (all roles) ─────────────────────────────────────
     Route::get('/statistics', [SacrificeAdminController::class, 'statistics'])->name('admin.statistics');
+
+    // ── Settings: admin only ───────────────────────────────────────
+    Route::middleware('role:admin')->group(function () {
+        Route::get('/settings',                          [AdminSettingsController::class, 'index'])->name('admin.settings');
+        Route::get('/settings/signature/{position}',     [AdminSettingsController::class, 'serveSignature'])->name('admin.settings.signature.serve');
+        Route::post('/settings/signature',               [AdminSettingsController::class, 'uploadSignature'])->name('admin.settings.signature.upload');
+        Route::delete('/settings/signature',             [AdminSettingsController::class, 'deleteSignature'])->name('admin.settings.signature.delete');
+    });
 });

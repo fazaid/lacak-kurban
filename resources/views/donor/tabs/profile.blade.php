@@ -47,6 +47,10 @@
                 <p class="text-xs text-gray-500 mb-1">Program</p>
                 <p class="text-sm font-semibold text-gray-800">{{ $sacrifice->getSacrificeTypeLabel() }}</p>
             </div>
+            <div>
+                <p class="text-xs text-gray-500 mb-1">Jenis Berbagi</p>
+                <p class="text-sm font-semibold text-gray-800">{{ $sacrifice->getShareLabel() }}</p>
+            </div>
             @if($sacrifice->purchase_date)
             <div>
                 <p class="text-xs text-gray-500 mb-1">Tanggal Pembelian</p>

@@ -72,6 +72,14 @@
                     <i class="ti ti-external-link text-lg"></i>
                     Portal Donatur
                 </a>
+
+                @if(auth()->user()->role === 'admin')
+                <a href="{{ route('admin.settings') }}"
+                   class="flex items-center gap-3 px-3 py-2.5 rounded-lg mb-1 text-sm font-medium transition-colors {{ request()->routeIs('admin.settings*') ? 'bg-[#1D9E75] text-white' : 'text-gray-700 hover:bg-gray-100' }}">
+                    <i class="ti ti-settings text-lg"></i>
+                    Pengaturan
+                </a>
+                @endif
             </nav>
 
             {{-- User info --}}
