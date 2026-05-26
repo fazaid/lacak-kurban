@@ -138,64 +138,10 @@
             color: #555;
         }
         .signature-row {
-            width: 100%;
-            margin-top: auto;
-            padding-top: 10px;
-        }
-        .sig-table {
-            width: 100%;
-            border-collapse: collapse;
-            table-layout: fixed;
-        }
-        .sig-cell {
-            width: 33%;
-            vertical-align: bottom;
-            text-align: center;
-            padding: 0;
-        }
-        .sig-cell-mid {
-            width: 34%;
-            vertical-align: middle;
-            text-align: center;
-            padding: 0;
-            font-size: 9px;
-            color: #888;
-        }
-        .sig-box {
-            display: block;
-            text-align: center;
-            width: 140px;
-            margin: 0 auto;
-        }
-        .sig-line {
-            width: 100%;
-            border-bottom: 1px solid #333;
-            margin-bottom: 4px;
-            height: 40px;
-            text-align: center;
-            vertical-align: bottom;
-        }
-        .sig-img {
-            height: 36px;
-            max-width: 120px;
-        }
-        .sig-name {
-            font-size: 10px;
-            font-weight: bold;
-            color: #1a1a1a;
-        }
-        .sig-title {
-            font-size: 8px;
-            color: #888;
-        }
-        .bottom-note {
-            font-size: 8px;
-            color: #aaa;
             position: absolute;
-            bottom: 14mm;
-            left: 0;
-            right: 0;
-            text-align: center;
+            bottom: 16mm;
+            left: 18mm;
+            right: 18mm;
         }
     </style>
 </head>
@@ -257,41 +203,39 @@
         </div>
         @endif
 
-        <div class="signature-row">
-            <table class="sig-table">
-                <tr>
-                    <td class="sig-cell">
-                        <div class="sig-box">
-                            <div class="sig-line">
-                                @if($sigLeft)
-                                <img src="{{ $sigLeft }}" class="sig-img" alt="ttd">
-                                @endif
-                            </div>
-                            <div class="sig-name">Muhammad Rivaldy Ramadhan</div>
-                            <div class="sig-title">Ketua Pelaksana Kurban NPC</div>
-                        </div>
-                    </td>
-                    <td class="sig-cell-mid">
-                        Diterbitkan:<br>{{ $sacrifice->certificate_generated_at->format('d F Y') }}
-                    </td>
-                    <td class="sig-cell">
-                        <div class="sig-box">
-                            <div class="sig-line">
-                                @if($sigRight)
-                                <img src="{{ $sigRight }}" class="sig-img" alt="ttd">
-                                @endif
-                            </div>
-                            <div class="sig-name">Masri Udin</div>
-                            <div class="sig-title">Direktur Eksekutif</div>
-                        </div>
-                    </td>
-                </tr>
-            </table>
-        </div>
     </div>
 
-    <div class="bottom-note">
-        Dokumen ini diterbitkan secara digital oleh NPC | kurban.npc.id
+    <div class="signature-row">
+        <table style="width:100%;border-collapse:collapse;">
+            <tr>
+                <td style="width:40%;text-align:center;vertical-align:bottom;padding:0 14px 6px;">
+                    <div style="height:50px;text-align:center;margin-bottom:4px;">
+                        @if($sigLeft)
+                        <img src="{{ $sigLeft }}" style="max-height:45px;max-width:120px;" alt="ttd">
+                        @endif
+                    </div>
+                    <div style="font-size:11px;font-weight:bold;color:#1a1a1a;border-top:1px solid #333;padding-top:4px;">Muhammad Rivaldy Ramadhan</div>
+                    <div style="font-size:9px;color:#666;">Ketua Pelaksana Kurban NPC</div>
+                </td>
+                <td style="width:20%;text-align:center;vertical-align:bottom;font-size:9px;color:#555;padding:0 8px 6px;">
+                    Diterbitkan:<br>{{ $sacrifice->certificate_generated_at->format('d F Y') }}
+                </td>
+                <td style="width:40%;text-align:center;vertical-align:bottom;padding:0 14px 6px;">
+                    <div style="height:50px;text-align:center;margin-bottom:4px;">
+                        @if($sigRight)
+                        <img src="{{ $sigRight }}" style="max-height:45px;max-width:120px;" alt="ttd">
+                        @endif
+                    </div>
+                    <div style="font-size:11px;font-weight:bold;color:#1a1a1a;border-top:1px solid #333;padding-top:4px;">Masri Udin</div>
+                    <div style="font-size:9px;color:#666;">Direktur Eksekutif</div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" style="text-align:center;font-size:8px;color:#aaa;padding-top:4px;">
+                    Dokumen ini diterbitkan secara digital oleh NPC | kurban.npc.id
+                </td>
+            </tr>
+        </table>
     </div>
 </div>
 </body>
