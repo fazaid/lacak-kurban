@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminSettingsController;
+use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SacrificeAdminController;
 use Illuminate\Support\Facades\Route;
@@ -65,6 +66,17 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     // ── Statistics (all roles) ─────────────────────────────────────
     Route::get('/statistics', [SacrificeAdminController::class, 'statistics'])->name('admin.statistics');
+
+    // ── User management: admin only ───────────────────────────────
+    Route::middleware('role:admin')->group(function () {
+        Route::get('/users',                        [AdminUserController::class, 'index'])->name('admin.users.index');
+        Route::get('/users/create',                 [AdminUserController::class, 'create'])->name('admin.users.create');
+        Route::post('/users',                       [AdminUserController::class, 'store'])->name('admin.users.store');
+        Route::get('/users/{user}/edit',            [AdminUserController::class, 'edit'])->name('admin.users.edit');
+        Route::put('/users/{user}',                 [AdminUserController::class, 'update'])->name('admin.users.update');
+        Route::put('/users/{user}/reset-password',  [AdminUserController::class, 'resetPassword'])->name('admin.users.reset-password');
+        Route::delete('/users/{user}',              [AdminUserController::class, 'destroy'])->name('admin.users.destroy');
+    });
 
     // ── Settings: admin only ───────────────────────────────────────
     Route::middleware('role:admin')->group(function () {
