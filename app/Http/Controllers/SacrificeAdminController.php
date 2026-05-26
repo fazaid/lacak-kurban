@@ -304,9 +304,10 @@ class SacrificeAdminController extends Controller
         $total = Sacrifice::count();
 
         // ── Summary figures ──────────────────────────────────────────────────
-        $totalDonated    = (float) Sacrifice::sum('animal_price');
-        $priceCount      = Sacrifice::whereNotNull('animal_price')->count();
-        $avgPrice        = $priceCount > 0 ? $totalDonated / $priceCount : 0;
+        // animal_price menyimpan kontribusi aktual donatur (bukan harga hewan penuh).
+        $totalDonated = (float) Sacrifice::sum('animal_price');
+        $priceCount   = Sacrifice::whereNotNull('animal_price')->count();
+        $avgPrice     = $priceCount > 0 ? $totalDonated / $priceCount : 0;
 
         $completedCount  = Sacrifice::where('status_purchase',     'completed')
                                ->where('status_slaughter',    'completed')

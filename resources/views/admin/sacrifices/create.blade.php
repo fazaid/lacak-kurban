@@ -95,17 +95,6 @@
                     @error('animal_type') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                 </div>
 
-                {{-- Animal price --}}
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Harga Hewan (Rp)</label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 text-sm pointer-events-none">Rp</span>
-                        <input type="number" name="animal_price" value="{{ old('animal_price') }}" step="1000" min="0"
-                               class="w-full pl-9 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1D9E75]"
-                               placeholder="0">
-                    </div>
-                </div>
-
                 {{-- Sharing type (populated by JS) --}}
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Kepemilikan <span class="text-red-500">*</span></label>
@@ -132,6 +121,17 @@
                 </div>
                 {{-- Hidden fallback: share_ratio=1 when full (ratio-section hidden but input still submits) --}}
                 <input type="hidden" id="share_ratio_full" name="share_ratio" value="1">
+
+                {{-- Animal price --}}
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Nominal (Rp)</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 text-sm pointer-events-none">Rp</span>
+                        <input type="number" name="animal_price" value="{{ old('animal_price') }}" step="1000" min="0"
+                               class="w-full pl-9 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1D9E75]"
+                               placeholder="0">
+                    </div>
+                </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Pembelian</label>

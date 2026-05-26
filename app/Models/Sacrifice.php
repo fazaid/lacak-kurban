@@ -286,13 +286,10 @@ class Sacrifice extends Model
         return $this->getShareInfo()['label'];
     }
 
-    /** Donator's contribution = animal_price ÷ fixed denominator per animal type. */
+    /** Kontribusi donatur — nilai yang tersimpan di animal_price sudah merupakan jumlah yang dibayar. */
     public function getTotalPrice(): float
     {
-        if (!$this->animal_price) return 0.0;
-        if ($this->sharing_type === 'full') return (float) $this->animal_price;
-        $denominator = self::getShareRatioForAnimal($this->animal_type ?? '');
-        return (float) $this->animal_price / $denominator;
+        return (float) ($this->animal_price ?? 0);
     }
 
     // -------------------------------------------------------------------------

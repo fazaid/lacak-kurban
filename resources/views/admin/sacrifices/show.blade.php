@@ -69,7 +69,7 @@
                     </div>
                     <div><p class="text-xs text-gray-500">Jenis Hewan</p><p class="font-semibold text-sm">{{ $sacrifice->getAnimalTypeLabel() }}</p></div>
                     @if($sacrifice->animal_price)
-                    <div><p class="text-xs text-gray-500">Harga Hewan</p><p class="font-semibold text-sm">Rp {{ number_format($sacrifice->animal_price, 0, ',', '.') }}</p></div>
+                    <div><p class="text-xs text-gray-500">Nominal</p><p class="font-semibold text-sm">Rp {{ number_format($sacrifice->animal_price, 0, ',', '.') }}</p></div>
                     @endif
                     <div>
                         <p class="text-xs text-gray-500">Jenis Berbagi</p>
