@@ -170,7 +170,7 @@
 
         <p class="text-center text-sm text-gray-500 mt-8">
             Masih ada pertanyaan?
-            <a href="mailto:info@npc.id" class="text-[#1D9E75] font-medium hover:underline">Hubungi kami</a>
+            <a href="https://wa.me/6281119119898" target="_blank" rel="noopener" class="text-[#1D9E75] font-medium hover:underline">Hubungi kami</a>
         </p>
     </div>
 </section>

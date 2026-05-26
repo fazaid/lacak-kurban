@@ -34,6 +34,14 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/sacrifices/export/csv', [SacrificeAdminController::class, 'export'])
          ->middleware('role:admin')->name('admin.export');
 
+    // staff + admin only
+    Route::get('/sacrifices/import',          [SacrificeAdminController::class, 'importForm'])
+         ->middleware('role:admin,staff')->name('admin.sacrifices.import');
+    Route::post('/sacrifices/import',         [SacrificeAdminController::class, 'import'])
+         ->middleware('role:admin,staff')->name('admin.sacrifices.import.process');
+    Route::get('/sacrifices/import/template', [SacrificeAdminController::class, 'importTemplate'])
+         ->middleware('role:admin,staff')->name('admin.sacrifices.import.template');
+
     // ── Sacrifices: dynamic {sacrifice} routes ─────────────────────
     Route::get('/sacrifices/{sacrifice}', [SacrificeAdminController::class, 'show'])
          ->name('admin.sacrifices.show');

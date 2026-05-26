@@ -274,7 +274,7 @@ class SacrificeAdminController extends Controller
                 'Status Distribusi', 'Tgl Distribusi',
                 'Status Laporan', 'Tgl Laporan',
                 'Progress (%)', 'Status', 'Catatan', 'Dibuat',
-            ]);
+            ], ',', '"', '\\');
 
             foreach ($sacrifices as $s) {
                 fputcsv($file, [
@@ -290,7 +290,7 @@ class SacrificeAdminController extends Controller
                     $s->status_report, $s->date_report_completed?->format('d/m/Y'),
                     $s->getProgressPercentage(), $s->getStatusLabel(),
                     $s->notes, $s->created_at->format('d/m/Y H:i'),
-                ]);
+                ], ',', '"', '\\');
             }
 
             fclose($file);
@@ -422,5 +422,194 @@ class SacrificeAdminController extends Controller
         $newNumber = $lastCode ? ((int) substr($lastCode, -3)) + 1 : 1;
 
         return sprintf('NPC-%s-%03d', $year, $newNumber);
+    }
+
+    // ── Import ────────────────────────────────────────────────────────────────
+
+    public function importForm(): View
+    {
+        return view('admin.sacrifices.import');
+    }
+
+    public function importTemplate(): StreamedResponse
+    {
+        $headers = [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="template-import-kurban.csv"',
+        ];
+
+        $callback = function () {
+            $file = fopen('php://output', 'w');
+            fprintf($file, chr(0xEF) . chr(0xBB) . chr(0xBF));
+
+            fputcsv($file, [
+                'kode_referensi', 'jenis_kurban', 'nama_donatur', 'email_donatur', 'telepon_donatur',
+                'jenis_hewan', 'nominal', 'kepemilikan', 'rasio_saham',
+                'tanggal_pembelian', 'lokasi_pembelian', 'lokasi_penyembelihan',
+                'nama_penerima', 'alamat_penerima', 'jenis_penerima', 'catatan',
+            ], ',', '"', '\\');
+
+            fputcsv($file, [
+                'NPC-2025-001', 'palestina', 'Ahmad Fauzi', 'ahmad@email.com', '08123456789',
+                'sapi', '3000000', 'collective', '1',
+                '22/06/2025', 'Jakarta', 'Gaza, Palestina',
+                'Keluarga Al-Habib', 'Kamp Jabalia', 'Pengungsi', 'Kurban atas nama ayah',
+            ], ',', '"', '\\');
+
+            fputcsv($file, [
+                '', 'nusantara', 'Siti Rahayu', 'siti@email.com', '08567891234',
+                'domba', '2500000', 'full', '1',
+                '22/06/2025', 'Bandung', 'Sukabumi, Jawa Barat',
+                '', '', '', '',
+            ], ',', '"', '\\');
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
+    public function import(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'file' => ['required', 'file', 'mimes:csv,txt', 'max:5120'],
+        ], [
+            'file.required' => 'Pilih file CSV terlebih dahulu.',
+            'file.mimes'    => 'File harus berformat CSV.',
+            'file.max'      => 'Ukuran file maksimal 5 MB.',
+        ]);
+
+        $handle = fopen($request->file('file')->getRealPath(), 'r');
+        $rawHeader = fgetcsv($handle, 0, ',', '"', '\\');
+
+        if (!$rawHeader) {
+            fclose($handle);
+            return back()->withErrors(['file' => 'File CSV kosong atau tidak valid.']);
+        }
+
+        // Normalize: strip BOM + trim + lowercase
+        $header = array_map(fn ($h) => strtolower(trim(ltrim($h, "\xEF\xBB\xBF"))), $rawHeader);
+
+        $requiredCols = ['jenis_kurban', 'nama_donatur', 'jenis_hewan', 'kepemilikan'];
+        foreach ($requiredCols as $col) {
+            if (!in_array($col, $header)) {
+                fclose($handle);
+                return back()->withErrors(['file' => "Kolom wajib '{$col}' tidak ditemukan di header CSV."]);
+            }
+        }
+
+        $imported = 0;
+        $warnings = [];
+        $rowNum   = 1;
+
+        while (($row = fgetcsv($handle, 0, ',', '"', '\\')) !== false) {
+            $rowNum++;
+
+            // Skip completely empty rows
+            if (count(array_filter($row, fn ($v) => trim($v) !== '')) === 0) {
+                continue;
+            }
+
+            if (count($row) < count($header)) {
+                $row = array_pad($row, count($header), '');
+            }
+
+            $data = array_combine($header, array_slice($row, 0, count($header)));
+            $data = array_map('trim', $data);
+
+            $ref = fn ($key) => $data[$key] ?? '';
+
+            // Validate required values
+            if ($ref('jenis_kurban') === '' || $ref('nama_donatur') === '' || $ref('jenis_hewan') === '' || $ref('kepemilikan') === '') {
+                $warnings[] = "Baris {$rowNum}: kolom wajib (jenis_kurban, nama_donatur, jenis_hewan, kepemilikan) tidak boleh kosong.";
+                continue;
+            }
+
+            if (!in_array($ref('jenis_kurban'), ['palestina', 'nusantara'])) {
+                $warnings[] = "Baris {$rowNum}: jenis_kurban harus 'palestina' atau 'nusantara', ditemukan '{$ref('jenis_kurban')}'.";
+                continue;
+            }
+
+            if (!in_array($ref('jenis_hewan'), ['unta', 'sapi', 'domba'])) {
+                $warnings[] = "Baris {$rowNum}: jenis_hewan harus 'unta', 'sapi', atau 'domba', ditemukan '{$ref('jenis_hewan')}'.";
+                continue;
+            }
+
+            if (!in_array($ref('kepemilikan'), ['full', 'collective'])) {
+                $warnings[] = "Baris {$rowNum}: kepemilikan harus 'full' atau 'collective', ditemukan '{$ref('kepemilikan')}'.";
+                continue;
+            }
+
+            if (!Sacrifice::validateAnimalTypeForSacrificeType($ref('jenis_kurban'), $ref('jenis_hewan'))) {
+                $warnings[] = "Baris {$rowNum}: hewan '{$ref('jenis_hewan')}' tidak tersedia untuk program '{$ref('jenis_kurban')}'.";
+                continue;
+            }
+
+            if (!Sacrifice::validateSharingCombination($ref('jenis_hewan'), $ref('kepemilikan'))) {
+                $warnings[] = "Baris {$rowNum}: domba hanya bisa kepemilikan 'full'.";
+                continue;
+            }
+
+            // Reference code
+            $referenceCode = $ref('kode_referensi') !== '' ? $ref('kode_referensi') : $this->generateReferenceCode();
+
+            if (Sacrifice::where('reference_code', $referenceCode)->exists()) {
+                $warnings[] = "Baris {$rowNum}: kode referensi '{$referenceCode}' sudah ada, baris dilewati.";
+                continue;
+            }
+
+            // Parse date dd/mm/yyyy
+            $purchaseDate = null;
+            if ($ref('tanggal_pembelian') !== '') {
+                try {
+                    $purchaseDate = \Carbon\Carbon::createFromFormat('d/m/Y', $ref('tanggal_pembelian'));
+                } catch (\Exception) {
+                    // invalid date — skip silently, leave null
+                }
+            }
+
+            // Share ratio
+            $shareRatio = $ref('kepemilikan') === 'full' ? 1 : max(1, (int) ($ref('rasio_saham') ?: 1));
+
+            // Nominal: strip non-numeric except dot
+            $nominal = $ref('nominal') !== '' ? (float) preg_replace('/[^0-9.]/', '', $ref('nominal')) : null;
+
+            Sacrifice::create([
+                'reference_code'      => $referenceCode,
+                'sacrifice_type'      => $ref('jenis_kurban'),
+                'donor_name'          => $ref('nama_donatur'),
+                'donor_email'         => $ref('email_donatur') ?: null,
+                'donor_phone'         => $ref('telepon_donatur') ?: null,
+                'animal_type'         => $ref('jenis_hewan'),
+                'animal_price'        => $nominal,
+                'sharing_type'        => $ref('kepemilikan'),
+                'share_ratio'         => $shareRatio,
+                'purchase_date'       => $purchaseDate,
+                'purchase_location'   => $ref('lokasi_pembelian') ?: null,
+                'slaughter_location'  => $ref('lokasi_penyembelihan') ?: null,
+                'beneficiary_name'    => $ref('nama_penerima') ?: null,
+                'beneficiary_address' => $ref('alamat_penerima') ?: null,
+                'beneficiary_type'    => $ref('jenis_penerima') ?: null,
+                'notes'               => $ref('catatan') ?: null,
+                'status_purchase'     => 'pending',
+                'status_slaughter'    => 'pending',
+                'status_on_way'       => 'pending',
+                'status_distribution' => 'pending',
+                'status_report'       => 'pending',
+            ]);
+
+            $imported++;
+        }
+
+        fclose($handle);
+
+        $message = "Berhasil mengimpor {$imported} data kurban.";
+        if (!empty($warnings)) {
+            return redirect()->route('admin.sacrifices.index')
+                ->with('success', $message)
+                ->with('import_warnings', $warnings);
+        }
+
+        return redirect()->route('admin.sacrifices.index')->with('success', $message);
     }
 }

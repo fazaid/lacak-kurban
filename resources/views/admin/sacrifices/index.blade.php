@@ -5,11 +5,20 @@
 @section('breadcrumb', 'Admin / Data Kurban')
 
 @section('header-actions')
+    @if(auth()->user()->canWrite())
+    <a href="{{ route('admin.sacrifices.import') }}"
+       class="inline-flex items-center gap-2 text-gray-700 hover:text-gray-900 text-sm font-semibold px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors">
+        <i class="ti ti-file-import"></i>
+        Import CSV
+    </a>
+    @endif
+    @if(auth()->user()->canWrite())
     <a href="{{ route('admin.sacrifices.create') }}"
        class="inline-flex items-center gap-2 bg-[#1D9E75] hover:bg-[#157a5a] text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors">
         <i class="ti ti-plus"></i>
         Tambah Kurban
     </a>
+    @endif
 @endsection
 
 @php

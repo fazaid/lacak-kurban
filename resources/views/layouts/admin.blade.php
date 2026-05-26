@@ -149,6 +149,19 @@
                         <span>{{ session('error') }}</span>
                     </div>
                 @endif
+                @if(session('import_warnings'))
+                    <div class="bg-yellow-50 border border-yellow-200 text-yellow-800 rounded-lg px-4 py-3 text-sm mb-4">
+                        <div class="flex items-center gap-2 font-semibold mb-2">
+                            <i class="ti ti-alert-triangle text-yellow-600 text-base flex-shrink-0"></i>
+                            {{ count(session('import_warnings')) }} baris dilewati saat import:
+                        </div>
+                        <ul class="list-disc list-inside space-y-0.5 text-xs">
+                            @foreach(session('import_warnings') as $warn)
+                            <li>{{ $warn }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
             </div>
 
             {{-- Page content --}}
