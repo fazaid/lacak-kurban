@@ -95,7 +95,7 @@
                         <div class="w-7 h-7 bg-[#1D9E75] rounded-md flex items-center justify-center flex-shrink-0">
                             <img src="{{ asset('images/logos/logo.png') }}"
                      alt="NPC - Nusantara Palestina Center"
-                     class="h-6 w-auto drop-shadow-lg">
+                     class="h-7 w-auto drop-shadow-lg">
                         </div>
                         <span class="font-bold text-gray-800 text-sm">NPC Kurban Tracker</span>
                     </div>
