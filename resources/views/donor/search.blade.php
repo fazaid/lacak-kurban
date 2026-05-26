@@ -12,7 +12,7 @@
         <div class="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-2xl mb-5">
             <img src="{{ asset('images/logos/logo.png') }}"
                      alt="NPC - Nusantara Palestina Center"
-                     class="h-32 w-auto drop-shadow-lg">
+                     class="h-16 w-auto drop-shadow-lg">
         </div>
         <h1 class="text-3xl sm:text-4xl font-bold text-white mb-2">Lacak Kurban Anda</h1>
         <p class="text-white/80 text-base sm:text-lg mb-10 max-w-sm mx-auto">
