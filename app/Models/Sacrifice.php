@@ -130,7 +130,7 @@ class Sacrifice extends Model
                 'description' => 'Daging kurban sedang dalam perjalanan menuju lokasi distribusi',
                 'status' => $this->status_on_way,
                 'date' => $this->date_on_way_completed,
-                'icon' => 'ti-map-pin-route',
+                'icon' => 'ti-truck',
             ],
             [
                 'key' => 'distribution',

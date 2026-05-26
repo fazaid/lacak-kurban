@@ -26,7 +26,7 @@
     </header>
 
     {{-- Tab navigation --}}
-    <div class="bg-white border-b border-gray-200 sticky top-14 z-10 shadow-sm">
+    <div class="bg-white border-b border-gray-200 sticky top-14 z-30 shadow-sm">
         <div class="max-w-3xl mx-auto px-4">
             <div class="flex overflow-x-auto -mb-px scrollbar-hide" id="nav-tabs">
                 @foreach([

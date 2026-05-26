@@ -33,7 +33,7 @@
                 @endif
 
                 {{-- Icon --}}
-                <div class="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center z-10
+                <div class="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center relative z-[1]
                     {{ $isCompleted ? 'bg-[#1D9E75] text-white' : 'bg-gray-100 text-gray-400' }}">
                     <i class="ti {{ $stage['icon'] }} text-base"></i>
                 </div>
