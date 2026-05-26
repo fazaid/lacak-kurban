@@ -24,12 +24,12 @@
         .border-outer {
             position: absolute;
             inset: 8mm;
-            border: 3px solid #1D9E75;
+            border: 3px solid #e7202a;
         }
         .border-inner {
             position: absolute;
             inset: 12mm;
-            border: 1px solid #1D9E75;
+            border: 1px solid #e7202a;
         }
         .content {
             position: absolute;
@@ -48,26 +48,23 @@
         .logo-circle {
             width: 40px;
             height: 40px;
-            border-radius: 50%;
-            background: #1D9E75;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 18px;
-            font-weight: bold;
+        }
+        .logo-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
         .org-name {
             font-size: 14px;
             font-weight: bold;
-            color: #1D9E75;
+            color: #e7202a;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
         .divider {
             width: 100%;
             height: 1px;
-            background: linear-gradient(to right, transparent, #1D9E75, transparent);
+            background: linear-gradient(to right, transparent, #e7202a, transparent);
             margin: 8px 0;
         }
         .cert-title {
@@ -86,7 +83,7 @@
             margin-bottom: 14px;
         }
         .ref-badge {
-            background: #1D9E75;
+            background: #e7202a;
             color: white;
             padding: 4px 16px;
             border-radius: 20px;
@@ -106,7 +103,7 @@
             font-weight: bold;
             color: #1a1a1a;
             margin: 4px 0 12px;
-            border-bottom: 2px solid #1D9E75;
+            border-bottom: 2px solid #e7202a;
             padding-bottom: 6px;
             min-width: 200px;
         }
@@ -119,7 +116,7 @@
         }
         .detail-box {
             background: #f8fdfb;
-            border: 1px solid #1D9E75;
+            border: 1px solid #e7202a;
             border-radius: 6px;
             padding: 8px 14px;
             min-width: 120px;
@@ -178,6 +175,10 @@
         }
     </style>
 </head>
+@php
+    $logoPath = public_path('images/logos/logo.png');
+    $logoBase64 = 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath));
+@endphp
 <body>
 <div class="page">
     <div class="border-outer"></div>
@@ -185,8 +186,8 @@
 
     <div class="content">
         <div class="header">
-            <div class="logo-circle">N</div>
-            <div class="org-name">NPC Kurban Tracker</div>
+            <div class="logo-circle"><img src="{{ $logoBase64 }}" alt="Logo NPC"></div>
+            <div class="org-name">Kurban Laznas NPC</div>
         </div>
 
         <div class="divider"></div>
@@ -217,7 +218,7 @@
             @if($sacrifice->slaughter_location)
             <div class="detail-box">
                 <div class="detail-label">Lokasi</div>
-                <div class="detail-value">{{ Str::limit($sacrifice->slaughter_location, 30) }}</div>
+                <div class="detail-value">{{ Str::limit($sacrifice->slaughter_location, 50) }}</div>
             </div>
             @endif
         </div>
@@ -247,7 +248,7 @@
     </div>
 
     <div class="bottom-note">
-        Dokumen ini diterbitkan secara digital oleh NPC Kurban Tracker | npc-kurban.id
+        Dokumen ini diterbitkan secara digital oleh NPC | kurban.npc.id
     </div>
 </div>
 </body>

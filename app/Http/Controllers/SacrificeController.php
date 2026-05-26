@@ -73,6 +73,20 @@ class SacrificeController extends Controller
         return $pdf->download("sertifikat-kurban-{$sacrifice->reference_code}.pdf");
     }
 
+    public function printCertificate(string $slug)
+    {
+        $sacrifice = Sacrifice::where('public_slug', $slug)->firstOrFail();
+
+        if (!$sacrifice->hasCertificate()) {
+            abort(403, 'Sertifikat belum tersedia untuk kurban ini.');
+        }
+
+        $pdf = Pdf::loadView('certificates.sacrifice', compact('sacrifice'));
+        $pdf->setPaper('A4', 'landscape');
+
+        return $pdf->stream("sertifikat-kurban-{$sacrifice->reference_code}.pdf");
+    }
+
     private function renderDetail(string $slug, string $activeTab, Request $request): View
     {
         $sacrifice = Sacrifice::with('galleries')

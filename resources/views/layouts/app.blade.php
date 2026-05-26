@@ -6,6 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'NPC Kurban Tracker')</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.7.0/dist/tabler-icons.min.css">
+    <link rel="icon" type="image/png" href="{{ asset('images/logos/logo.png') }}" sizes="32x32">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
 </head>
@@ -18,7 +19,9 @@
             {{-- Logo --}}
             <a href="{{ route('home') }}" class="flex items-center gap-2.5 group">
                 <div class="w-8 h-8 bg-[#1D9E75] rounded-lg flex items-center justify-center group-hover:bg-[#157a5a] transition-colors flex-shrink-0">
-                    <i class="ti ti-moon-stars text-white text-sm"></i>
+                    <img src="{{ asset('images/logos/logo.png') }}"
+                     alt="NPC Logo"
+                     class="h-8 w-auto">
                 </div>
                 <div class="leading-none">
                     <span class="font-bold text-gray-800 text-sm">NPC</span>
@@ -70,8 +73,7 @@
         @endif
         @if(session('info'))
         <div role="alert" class="flex items-start gap-3 bg-blue-50 border border-blue-200 text-blue-800 rounded-xl px-4 py-3 text-sm mb-2">
-            <i class="ti ti-info-circle text-blue-600 flex-shrink-0 mt-0.5"></i>
-            <span>{{ session('info') }}</span>
+            <i class="ti ti-info-circle text-blue-600 flex-shrink-0 mt-0.5"></i>           <span>{{ session('info') }}</span>
         </div>
         @endif
     </div>
@@ -91,7 +93,9 @@
                 <div>
                     <div class="flex items-center gap-2 mb-3">
                         <div class="w-7 h-7 bg-[#1D9E75] rounded-md flex items-center justify-center flex-shrink-0">
-                            <i class="ti ti-moon-stars text-white text-xs"></i>
+                            <img src="{{ asset('images/logos/logo.png') }}"
+                     alt="NPC - Nusantara Palestina Center"
+                     class="h-6 w-auto drop-shadow-lg">
                         </div>
                         <span class="font-bold text-gray-800 text-sm">NPC Kurban Tracker</span>
                     </div>

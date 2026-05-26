@@ -18,12 +18,12 @@
                 <i class="ti ti-download"></i>
                 Unduh PDF
             </a>
-            <button type="button"
-                    onclick="window.print()"
-                    class="inline-flex items-center justify-center gap-2 bg-white/20 hover:bg-white/30 text-white font-semibold px-6 py-3 rounded-xl transition-colors border border-white/30">
+            <a href="{{ route('sacrifice.certificate.print', $sacrifice->public_slug) }}"
+               target="_blank"
+               class="inline-flex items-center justify-center gap-2 bg-white/20 hover:bg-white/30 text-white font-semibold px-6 py-3 rounded-xl transition-colors border border-white/30">
                 <i class="ti ti-printer"></i>
                 Cetak
-            </button>
+            </a>
         </div>
     </div>
 

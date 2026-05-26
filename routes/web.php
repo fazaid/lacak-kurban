@@ -19,6 +19,7 @@ Route::prefix('sacrifice/{slug}')
         Route::get('/gallery', [SacrificeController::class, 'gallery'])->name('sacrifice.gallery');
         Route::get('/certificate', [SacrificeController::class, 'certificate'])->name('sacrifice.certificate');
         Route::get('/download-certificate', [SacrificeController::class, 'downloadCertificate'])->name('sacrifice.certificate.download');
+        Route::get('/print-certificate', [SacrificeController::class, 'printCertificate'])->name('sacrifice.certificate.print');
     });
 
 Route::fallback(fn () => response()->view('errors.404', [], 404));
