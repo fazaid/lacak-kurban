@@ -138,27 +138,34 @@
             color: #555;
         }
         .signature-row {
-            display: table;
             width: 100%;
             margin-top: auto;
             padding-top: 10px;
         }
+        .sig-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
         .sig-cell {
-            display: table-cell;
             width: 33%;
             vertical-align: bottom;
             text-align: center;
+            padding: 0;
         }
-        .sig-cell-right {
-            display: table-cell;
-            width: 33%;
-            vertical-align: bottom;
-            text-align: right;
+        .sig-cell-mid {
+            width: 34%;
+            vertical-align: middle;
+            text-align: center;
+            padding: 0;
+            font-size: 9px;
+            color: #888;
         }
         .sig-box {
-            display: inline-block;
+            display: block;
             text-align: center;
             width: 140px;
+            margin: 0 auto;
         }
         .sig-line {
             width: 100%;
@@ -251,31 +258,35 @@
         @endif
 
         <div class="signature-row">
-            <div class="sig-cell">
-                <div class="sig-box">
-                    <div class="sig-line">
-                        @if($sigLeft)
-                        <img src="{{ $sigLeft }}" class="sig-img" alt="ttd">
-                        @endif
-                    </div>
-                    <div class="sig-name">Muhammad Rivaldy Ramadhan</div>
-                    <div class="sig-title">Ketua Pelaksana Kurban NPC</div>
-                </div>
-            </div>
-            <div class="sig-cell" style="font-size:9px; color:#888; padding-bottom:2px;">
-                Diterbitkan: {{ $sacrifice->certificate_generated_at->format('d F Y') }}
-            </div>
-            <div class="sig-cell-right">
-                <div class="sig-box">
-                    <div class="sig-line">
-                        @if($sigRight)
-                        <img src="{{ $sigRight }}" class="sig-img" alt="ttd">
-                        @endif
-                    </div>
-                    <div class="sig-name">Masri Udin</div>
-                    <div class="sig-title">Direktur Eksekutif</div>
-                </div>
-            </div>
+            <table class="sig-table">
+                <tr>
+                    <td class="sig-cell">
+                        <div class="sig-box">
+                            <div class="sig-line">
+                                @if($sigLeft)
+                                <img src="{{ $sigLeft }}" class="sig-img" alt="ttd">
+                                @endif
+                            </div>
+                            <div class="sig-name">Muhammad Rivaldy Ramadhan</div>
+                            <div class="sig-title">Ketua Pelaksana Kurban NPC</div>
+                        </div>
+                    </td>
+                    <td class="sig-cell-mid">
+                        Diterbitkan:<br>{{ $sacrifice->certificate_generated_at->format('d F Y') }}
+                    </td>
+                    <td class="sig-cell">
+                        <div class="sig-box">
+                            <div class="sig-line">
+                                @if($sigRight)
+                                <img src="{{ $sigRight }}" class="sig-img" alt="ttd">
+                                @endif
+                            </div>
+                            <div class="sig-name">Masri Udin</div>
+                            <div class="sig-title">Direktur Eksekutif</div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
         </div>
     </div>
 
