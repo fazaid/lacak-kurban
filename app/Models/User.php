@@ -37,10 +37,10 @@ class User extends Authenticatable
     public function canWrite(): bool { return in_array($this->role, ['admin', 'staff']); }
 
     /** Delete sacrifices and photos */
-    public function canDelete(): bool { return $this->role === 'admin'; }
+    public function canDelete(): bool { return in_array($this->role, ['admin', 'staff']); }
 
     /** Export CSV */
-    public function canExport(): bool { return $this->role === 'admin'; }
+    public function canExport(): bool { return in_array($this->role, ['admin', 'staff']); }
 
     /** Friendly label for UI display */
     public function roleLabel(): string

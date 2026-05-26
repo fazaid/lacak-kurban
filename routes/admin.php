@@ -30,9 +30,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/sacrifices',        [SacrificeAdminController::class, 'store'])
          ->middleware('role:admin,staff')->name('admin.sacrifices.store');
 
-    // admin only
+    // staff + admin only
     Route::get('/sacrifices/export/csv', [SacrificeAdminController::class, 'export'])
-         ->middleware('role:admin')->name('admin.export');
+         ->middleware('role:admin,staff')->name('admin.export');
 
     // staff + admin only
     Route::get('/sacrifices/import',          [SacrificeAdminController::class, 'importForm'])
@@ -63,14 +63,14 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/sacrifices/{sacrifice}/generate-certificate', [SacrificeAdminController::class, 'generateCertificate'])
          ->middleware('role:admin,staff')->name('admin.sacrifices.certificate.generate');
 
-    // admin only
+    // staff + admin only
     Route::delete('/sacrifices/{sacrifice}', [SacrificeAdminController::class, 'destroy'])
-         ->middleware('role:admin')->name('admin.sacrifices.destroy');
+         ->middleware('role:admin,staff')->name('admin.sacrifices.destroy');
 
     // ── Gallery ────────────────────────────────────────────────────
-    // admin only
+    // staff + admin only
     Route::delete('/gallery/{photo}', [SacrificeAdminController::class, 'deletePhoto'])
-         ->middleware('role:admin')->name('admin.galleries.delete');
+         ->middleware('role:admin,staff')->name('admin.galleries.delete');
 
     // ── Statistics (all roles) ─────────────────────────────────────
     Route::get('/statistics', [SacrificeAdminController::class, 'statistics'])->name('admin.statistics');
