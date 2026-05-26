@@ -131,15 +131,15 @@
                         </li>
                         <li class="flex items-center gap-1.5 text-xs text-gray-500">
                             <i class="ti ti-phone text-[#1D9E75] flex-shrink-0"></i>
-                            <a href="tel:+62800000000" class="hover:text-[#1D9E75] transition-colors">+62 800-000-0000</a>
+                            <a href="tel:021-87788187" class="hover:text-[#1D9E75] transition-colors">+62 21-87788187</a>
                         </li>
                         <li class="flex items-center gap-1.5 text-xs text-gray-500">
                             <i class="ti ti-brand-whatsapp text-[#1D9E75] flex-shrink-0"></i>
-                            <a href="https://wa.me/62800000000" class="hover:text-[#1D9E75] transition-colors" target="_blank" rel="noopener">WhatsApp</a>
+                            <a href="https://wa.me/6281119119898" class="hover:text-[#1D9E75] transition-colors" target="_blank" rel="noopener">WhatsApp</a>
                         </li>
                         <li class="flex items-start gap-1.5 text-xs text-gray-500">
                             <i class="ti ti-map-pin text-[#1D9E75] flex-shrink-0 mt-0.5"></i>
-                            <span>Jl. Contoh No.1, Jakarta, Indonesia</span>
+                            <span>Jl. Bina Marga No. 25 C99 Business Park, Ceger, Cipayung, Jakarta Timur, DKI Jakarta 13820</span>
                         </li>
                     </ul>
                 </div>

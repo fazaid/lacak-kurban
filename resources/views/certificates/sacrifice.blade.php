@@ -258,8 +258,8 @@
                         <img src="{{ $sigLeft }}" class="sig-img" alt="ttd">
                         @endif
                     </div>
-                    <div class="sig-name">Panitia Kurban NPC</div>
-                    <div class="sig-title">Ketua Pelaksana</div>
+                    <div class="sig-name">Muhammad Rivaldy Ramadhan</div>
+                    <div class="sig-title">Ketua Pelaksana Kurban NPC</div>
                 </div>
             </div>
             <div class="sig-cell" style="font-size:9px; color:#888; padding-bottom:2px;">
@@ -272,8 +272,8 @@
                         <img src="{{ $sigRight }}" class="sig-img" alt="ttd">
                         @endif
                     </div>
-                    <div class="sig-name">NPC Organization</div>
-                    <div class="sig-title">Direktur</div>
+                    <div class="sig-name">Masri Udin</div>
+                    <div class="sig-title">Direktur Eksekutif</div>
                 </div>
             </div>
         </div>
