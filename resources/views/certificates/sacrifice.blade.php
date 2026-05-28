@@ -44,13 +44,12 @@
             margin-bottom: 10px;
         }
         .logo-circle {
-            width: 56px;
-            height: 56px;
+            height: 36px;
             margin: 0 auto 6px;
         }
         .logo-circle img {
-            width: 100%;
             height: 100%;
+            width: auto;
             object-fit: contain;
         }
         .org-name {
@@ -146,7 +145,7 @@
     </style>
 </head>
 @php
-    $logoPath    = public_path('images/logos/logo.png');
+    $logoPath    = public_path('images/logos/logo-npc-kurban.png');
     $logoBase64  = 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath));
     $sigLeft     = \App\Http\Controllers\AdminSettingsController::signatureBase64('left');
     $sigRight    = \App\Http\Controllers\AdminSettingsController::signatureBase64('right');

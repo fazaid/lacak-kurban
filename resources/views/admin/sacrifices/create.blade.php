@@ -236,7 +236,30 @@
         return document.querySelector('input[name="sacrifice_type"]:checked')?.value ?? 'nusantara';
     }
 
+    function updateRadioStyles() {
+        typeRadios.forEach(radio => {
+            const label     = radio.closest('label');
+            const indicator = label.querySelector('.rounded-full.border-2');
+            const dot       = indicator.querySelector('.rounded-full');
+
+            if (radio.checked) {
+                label.classList.add('border-[#1D9E75]', 'bg-[#1D9E75]/5');
+                label.classList.remove('border-gray-200', 'hover:border-gray-300');
+                indicator.classList.add('border-[#1D9E75]');
+                indicator.classList.remove('border-gray-300');
+                dot.classList.remove('hidden');
+            } else {
+                label.classList.remove('border-[#1D9E75]', 'bg-[#1D9E75]/5');
+                label.classList.add('border-gray-200', 'hover:border-gray-300');
+                indicator.classList.remove('border-[#1D9E75]');
+                indicator.classList.add('border-gray-300');
+                dot.classList.add('hidden');
+            }
+        });
+    }
+
     function onSacrificeTypeChange() {
+        updateRadioStyles();
         const isPalestina = getSacrificeType() === 'palestina';
         untaOption.style.display = isPalestina ? '' : 'none';
         if (!isPalestina && animalSelect.value === 'unta') animalSelect.value = '';

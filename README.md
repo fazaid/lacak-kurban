@@ -1,58 +1,108 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# NPC Kurban Tracker
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Platform pelacakan kurban yang transparan dan terpercaya untuk **Nusantara Palestina Center (NPC)**. Donatur dapat memantau setiap tahapan kurban mereka secara real-time — mulai dari pembelian hewan hingga distribusi daging dan laporan akhir.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Fitur Utama
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Publik (Donatur)
+- **Lacak Kurban** — cari data kurban menggunakan kode referensi atau email
+- **Profil Kurban** — detail donatur, jenis hewan, tipe kurban (Palestina / Nusantara), dan porsi
+- **Progress** — pantau 5 tahap: Pembelian → Penyembelihan → Menuju Distribusi → Distribusi → Laporan
+- **Galeri Foto** — dokumentasi foto per kategori tahapan
+- **Sertifikat** — unduh atau cetak sertifikat kurban (PDF)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Admin Panel (`/admin`)
+| Fitur | Admin | Staff | Viewer |
+|---|:---:|:---:|:---:|
+| Lihat data kurban & statistik | ✓ | ✓ | ✓ |
+| Tambah / edit / hapus kurban | ✓ | ✓ | — |
+| Import CSV (bulk) | ✓ | ✓ | — |
+| Export CSV | ✓ | ✓ | — |
+| Upload foto galeri | ✓ | ✓ | — |
+| Generate sertifikat | ✓ | ✓ | — |
+| Manajemen pengguna | ✓ | — | — |
+| Pengaturan tanda tangan | ✓ | — | — |
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Tech Stack
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- **Backend**: PHP 8.3 + Laravel 13
+- **Frontend**: Tailwind CSS + Vite + Tabler Icons
+- **PDF**: barryvdh/laravel-dompdf
+- **Database**: SQLite (default) / MySQL
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+---
 
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## Instalasi
 
 ```bash
-composer require laravel/boost --dev
+# 1. Clone repo
+git clone <repo-url>
+cd Lacak-Kurban
 
-php artisan boost:install
+# 2. Setup otomatis (install, migrate, build)
+composer run setup
+
+# 3. Buat user admin pertama
+php artisan tinker
+> User::create(['name'=>'Admin','email'=>'admin@example.com','password'=>bcrypt('password'),'role'=>'admin'])
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+### Jalankan development server
 
-## Contributing
+```bash
+composer run dev
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Perintah ini menjalankan secara bersamaan: Laravel server, queue worker, log viewer (Pail), dan Vite dev server.
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Tipe Kurban & Hewan
 
-## Security Vulnerabilities
+| Tipe | Hewan Tersedia | Porsi Kolektif |
+|---|---|---|
+| Palestina | Unta, Sapi, Domba | Unta 1/10 · Sapi 1/7 |
+| Nusantara | Sapi, Domba | Sapi 1/7 |
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+> Domba hanya tersedia sebagai kurban penuh (tidak bisa kolektif).
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Tahapan Progress
+
+1. **Pembelian Hewan** — hewan kurban telah dibeli
+2. **Penyembelihan** — hewan telah disembelih sesuai syariat
+3. **Menuju Distribusi** — daging dalam perjalanan ke lokasi distribusi
+4. **Distribusi Daging** — daging telah didistribusikan ke penerima manfaat
+5. **Laporan** — laporan pelaksanaan selesai dibuat
+
+---
+
+## Struktur Role
+
+- **admin** — akses penuh termasuk manajemen pengguna dan pengaturan
+- **staff** — kelola data kurban, import/export, upload foto, generate sertifikat
+- **viewer** — hanya bisa melihat data dan statistik
+
+---
+
+## Perintah Berguna
+
+```bash
+# Jalankan test
+composer run test
+
+# Generate sertifikat PDF
+php artisan tinker
+> $s = Sacrifice::find(1); app(App\Http\Controllers\SacrificeAdminController::class)->generateCertificate(request(), $s);
+```
+
+---
+
+## Lisensi
+
+Aplikasi ini dikembangkan untuk keperluan internal NPC (Nusantara Palestina Center).
