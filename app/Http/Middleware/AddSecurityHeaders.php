@@ -26,11 +26,8 @@ class AddSecurityHeaders
             $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
         }
 
-        // No-cache on donor-facing and root pages (public sacrifice data is personal)
-        $path = $request->path();
-        if ($path === '/' || str_starts_with($path, 'sacrifice')) {
-            $response->headers->set('Cache-Control', 'no-store, private');
-        }
+        // All pages contain dynamic/personal data — never cache
+        $response->headers->set('Cache-Control', 'no-store, private');
 
         return $response;
     }
