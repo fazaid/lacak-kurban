@@ -225,6 +225,10 @@ class Sacrifice extends Model
 
     public function getAnimalTypeLabel(): string
     {
+        if ($this->animal_type === 'domba' && $this->sacrifice_type === 'nusantara') {
+            return 'Kambing';
+        }
+
         return match ($this->animal_type) {
             'unta' => 'Unta',
             'sapi' => 'Sapi',
