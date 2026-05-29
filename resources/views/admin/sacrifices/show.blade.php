@@ -32,9 +32,9 @@
             </div>
             <span class="text-sm font-bold text-[#1D9E75]">{{ $sacrifice->getProgressPercentage() }}%</span>
         </div>
-        <div class="text-xs text-gray-500">
+        {{-- <div class="text-xs text-gray-500">
             Didaftarkan: {{ $sacrifice->created_at->format('d M Y') }}
-        </div>
+        </div> --}}
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">

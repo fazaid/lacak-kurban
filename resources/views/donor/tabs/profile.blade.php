@@ -22,10 +22,10 @@
                 <p class="text-sm text-gray-800">{{ $sacrifice->donor_phone }}</p>
             </div>
             @endif
-            <div>
+            {{-- <div>
                 <p class="text-xs text-gray-500 mb-1">Tanggal Pendaftaran</p>
                 <p class="text-sm text-gray-800">{{ $sacrifice->created_at->translatedFormat('d F Y') }}</p>
-            </div>
+            </div> --}}
         </div>
     </div>
 
